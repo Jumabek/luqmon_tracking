@@ -1,6 +1,6 @@
 import torch
 import numpy as np
-from ultralytics.ultralytics.yolo.utils import ops
+from ultralytics.yolo.utils import ops
 
 
 def write_MOT_results(txt_path, results, frame_idx, i):
