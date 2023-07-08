@@ -1,6 +1,7 @@
 import torch
 import numpy as np
-from ultralytics.yolo.utils import ops
+from ultralytics.ultralytics.yolo.utils import ops
+
 
 def write_MOT_results(txt_path, results, frame_idx, i):
     nr_dets = len(results.boxes)
@@ -18,4 +19,5 @@ def write_MOT_results(txt_path, results, frame_idx, i):
     ], dim=1)
 
     with open(str(txt_path) + '.txt', 'ab') as f:  # append binary mode
-        np.savetxt(f, mot.numpy(), fmt='%d')  # save as ints instead of scientific notation
+        # save as ints instead of scientific notation
+        np.savetxt(f, mot.numpy(), fmt='%d')
