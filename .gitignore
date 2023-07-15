@@ -35,3 +35,4 @@ build/
 dist/
 *.egg-info/
 myvenv/
+myenv/
