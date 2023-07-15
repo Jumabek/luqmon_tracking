@@ -1,4 +1,21 @@
-# Real-time multi-object, segmentation and pose tracking using Yolov8 | Yolo-NAS | YOLOX with DeepOCSORT and LightMBN
+# This repo contains Luqmon Tracker - a tracker with high tracking performance while staying efficient. 
+## installation
+### notes
+- Git Submodules is used in this project. Refresh your knowledge on submodueles here https://git-scm.com/book/en/v2/Git-Tools-Submodules
+
+### steps
+- clone the project
+- go do ultralytics folder
+- git submodule init
+- git submodule update - it will clone ultralytics submodule from https://github.com/Jumabek/ultralytics (customized version for appearance feature extraction)
+- cd ..
+- pip install -r requirements.txt
+
+# Example
+- go to examples folder and run notebook.ipynb
+
+
+# (July2023) Forked Real-time multi-object, segmentation and pose tracking using Yolov8 | Yolo-NAS | YOLOX with DeepOCSORT and LightMBN
 
 
 <div align="center">
