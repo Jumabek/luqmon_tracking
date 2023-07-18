@@ -1,7 +1,16 @@
 # This repo contains Luqmon Tracker - a tracker with high tracking performance while staying efficient. 
 ## installation
-### notes
+### background
 - Git Submodules is used in this project. Refresh your knowledge on submodueles here https://git-scm.com/book/en/v2/Git-Tools-Submodules
+- The `pip install -e` command installs a package in development mode. Here's what it does:
+
+    1. It installs the package by creating a symbolic link to the source code directory instead of copying the files to the Python site-packages directory. This means that any changes made to the source code will immediately be reflected when you import and use the package.
+    
+    2. It creates an editable installation, allowing you to modify and contribute to the package code without the need to reinstall it every time you make changes.
+    
+    3. It creates an entry point for the package scripts, allowing you to execute the package's command-line tools directly.
+    
+    By using the `-e` option with `pip install`, you can install a package in development mode, making it easy to work on and test changes to the package code without the need for repetitive installations.
 
 ### steps
 - clone the project
