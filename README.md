@@ -5,11 +5,14 @@
 
 ### steps
 - clone the project
-- go do ultralytics folder
-- git submodule init
-- git submodule update - it will clone ultralytics submodule from https://github.com/Jumabek/ultralytics (customized version for appearance feature extraction)
-- cd ..
-- pip install -r requirements.txt
+- `cd luqman_tracker`
+- `pip install -r requirements.txt`
+- go to `ultralytics`  folder
+- `git submodule init`
+- `git submodule update` - it will clone ultralytics submodule from https://github.com/Jumabek/ultralytics (customized version for appearance feature extraction)
+- `cd ..`
+- `pip install -e ultralytics`
+
 
 # Example
 - go to examples folder and run notebook.ipynb
