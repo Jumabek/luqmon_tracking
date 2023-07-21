@@ -111,11 +111,13 @@ def run(args):
         # Inference
         with predictor.profilers[1]:
             preds = model(im, im0s)
-
+            feature_map = preds[2].clone()
+            print('len(preds)=', len(preds))
         # Postprocess moved to MultiYolo
         with predictor.profilers[2]:
             predictor.results = model.postprocess(
                 path, preds, im, im0s, predictor)
+
         predictor.run_callbacks('on_predict_postprocess_end')
 
         # Visualize, save, write results
@@ -132,7 +134,7 @@ def run(args):
                 dets = predictor.results[i].boxes.data
                 # get tracker predictions
                 predictor.tracker_outputs[i] = predictor.trackers[i].update(
-                    dets.cpu().detach().numpy(), im0)
+                    dets.cpu().detach().numpy(), im0, feature_map_boxes=predictor.results[i].feature_map_boxes[0], feature_map=feature_map)
             predictor.results[i].speed = {
                 'preprocess': predictor.profilers[0].dt * 1E3 / n,
                 'inference': predictor.profilers[1].dt * 1E3 / n,

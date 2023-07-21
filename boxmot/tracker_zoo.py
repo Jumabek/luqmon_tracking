@@ -11,14 +11,14 @@ def get_tracker_config(tracker_type):
         'configs' /\
         (tracker_type + '.yaml')
     return tracking_config
-    
+
 
 def create_tracker(tracker_type, tracker_config, reid_weights, device, half):
 
     with open(tracker_config, "r") as f:
         cfg = yaml.load(f.read(), Loader=yaml.FullLoader)
     cfg = SimpleNamespace(**cfg)  # easier dict acces by dot, instead of ['']
-    
+
     if tracker_type == 'strongsort':
         from boxmot.strongsort.strong_sort import StrongSORT
         strongsort = StrongSORT(
@@ -36,7 +36,7 @@ def create_tracker(tracker_type, tracker_config, reid_weights, device, half):
 
         )
         return strongsort
-    
+
     elif tracker_type == 'ocsort':
         from boxmot.ocsort.ocsort import OCSort
         ocsort = OCSort(
@@ -50,7 +50,7 @@ def create_tracker(tracker_type, tracker_config, reid_weights, device, half):
             use_byte=cfg.use_byte,
         )
         return ocsort
-    
+
     elif tracker_type == 'bytetrack':
         from boxmot.bytetrack.byte_tracker import BYTETracker
         bytetracker = BYTETracker(
@@ -60,7 +60,7 @@ def create_tracker(tracker_type, tracker_config, reid_weights, device, half):
             frame_rate=cfg.frame_rate
         )
         return bytetracker
-    
+
     elif tracker_type == 'botsort':
         from boxmot.botsort.bot_sort import BoTSORT
         botsort = BoTSORT(
@@ -69,11 +69,11 @@ def create_tracker(tracker_type, tracker_config, reid_weights, device, half):
             half,
             track_high_thresh=cfg.track_high_thresh,
             new_track_thresh=cfg.new_track_thresh,
-            track_buffer =cfg.track_buffer,
+            track_buffer=cfg.track_buffer,
             match_thresh=cfg.match_thresh,
             proximity_thresh=cfg.proximity_thresh,
             appearance_thresh=cfg.appearance_thresh,
-            cmc_method =cfg.cmc_method,
+            cmc_method=cfg.cmc_method,
             frame_rate=cfg.frame_rate,
             lambda_=cfg.lambda_
         )
@@ -93,6 +93,21 @@ def create_tracker(tracker_type, tracker_config, reid_weights, device, half):
             inertia=cfg.inertia,
         )
         return deepocsort
+    elif tracker_type == 'efficientocsort':
+        from boxmot.efficientocsort.ocsort import OCSort
+        efficientocsort = OCSort(
+            reid_weights,
+            device,
+            half,
+            det_thresh=cfg.det_thresh,
+            max_age=cfg.max_age,
+            min_hits=cfg.min_hits,
+            iou_threshold=cfg.iou_thresh,
+            delta_t=cfg.delta_t,
+            asso_func=cfg.asso_func,
+            inertia=cfg.inertia,
+        )
+        return efficientocsort
     else:
         print('No such tracker')
         exit()

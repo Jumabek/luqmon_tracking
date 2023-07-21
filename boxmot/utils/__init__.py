@@ -1,3 +1,4 @@
+from loguru import logger
 import sys
 from pathlib import Path
 
@@ -9,6 +10,17 @@ WEIGHTS = ROOT / 'examples' / 'weights'
 REQUIREMENTS = ROOT / 'requirements.txt'
 
 # global logger
-from loguru import logger
 logger.remove()
 logger.add(sys.stderr, colorize=True)
+
+variables = {
+    'FILE': FILE,
+    'ROOT': ROOT,
+    'BOXMOT': BOXMOT,
+    'EXAMPLES': EXAMPLES,
+    'WEIGHTS': WEIGHTS,
+    'REQUIREMENTS': REQUIREMENTS
+}
+
+for name, value in variables.items():
+    print(f'{name}: {value}')

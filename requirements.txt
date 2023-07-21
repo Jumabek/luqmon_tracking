@@ -1,7 +1,6 @@
 asttokens==2.2.1
 backcall==0.2.0
 beautifulsoup4==4.12.2
--e git+https://github.com/Jumabek/luqmon_tracking.git@66e723db619d5e26698f5924000a61b5c0d0acd7#egg=boxmot
 certifi==2023.5.7
 charset-normalizer==3.2.0
 cmake==3.26.4
