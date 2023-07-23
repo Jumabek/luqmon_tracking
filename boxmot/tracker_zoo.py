@@ -91,6 +91,7 @@ def create_tracker(tracker_type, tracker_config, reid_weights, device, half):
             delta_t=cfg.delta_t,
             asso_func=cfg.asso_func,
             inertia=cfg.inertia,
+            embedding_off=False
         )
         return deepocsort
     elif tracker_type == 'efficientocsort':
@@ -106,6 +107,7 @@ def create_tracker(tracker_type, tracker_config, reid_weights, device, half):
             delta_t=cfg.delta_t,
             asso_func=cfg.asso_func,
             inertia=cfg.inertia,
+            embedding_off=True
         )
         return efficientocsort
     else:

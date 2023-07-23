@@ -329,7 +329,7 @@ class OCSort(object):
         delta_t=3,
         asso_func="iou",
         inertia=0.2,
-        w_association_emb=0.75,
+        w_association_emb=0,  # 0.75,
         alpha_fixed_emb=0.95,
         aw_param=0.5,
         embedding_off=False,
@@ -395,7 +395,7 @@ class OCSort(object):
 
         # Embedding
         if self.embedding_off or dets.shape[0] == 0:
-            dets_embs = np.ones((dets.shape[0], 1))
+            dets_embs = torch.ones((dets.shape[0], 1))
         else:
             # (Ndets x X) [512, 1024, 2048]
             # dets_embs = self.embedder.compute_embedding(img, dets[:, :4], tag)

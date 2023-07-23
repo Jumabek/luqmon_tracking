@@ -363,7 +363,7 @@ class OCSort(object):
         self.aw_off = aw_off
         self.new_kf_off = new_kf_off
 
-    def update(self, dets, img, tag='blub'):
+    def update(self, dets, img, tag='blub', feature_map_boxes=None, feature_map=None):
         """
         Params:
           dets - a numpy array of detections in the format [[x1,y1,x2,y2,score],[x1,y1,x2,y2,score],...]
@@ -395,7 +395,7 @@ class OCSort(object):
 
         # Embedding
         if self.embedding_off or dets.shape[0] == 0:
-            dets_embs = np.ones((dets.shape[0], 1))
+            dets_embs = torch.ones((dets.shape[0], 1))
         else:
             # (Ndets x X) [512, 1024, 2048]
             # dets_embs = self.embedder.compute_embedding(img, dets[:, :4], tag)
