@@ -1,6 +1,8 @@
+*.pkl
+assets/
 .vscode/
 env/
-
+drafts/
 # interpreter bytecode
 __pycache__/
 
