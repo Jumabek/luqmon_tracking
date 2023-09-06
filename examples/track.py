@@ -48,9 +48,10 @@ def on_predict_start(predictor):
 
 @torch.no_grad()
 def run(args):
+    model = YOLO(args['yolo_model'])
 
-    model = YOLO(args['yolo_model'] if 'v8' in str(
-        args['yolo_model']) else 'yolov8n')
+    # model = YOLO(args['yolo_model'] if 'v8' in str(
+    #     args['yolo_model']) else 'yolov8n')
     overrides = model.overrides.copy()
     model.predictor = TASK_MAP[model.task][3](
         overrides=overrides, _callbacks=model.callbacks)
@@ -161,16 +162,20 @@ def run(args):
                     # append folder name containing current img
                     predictor.MOT_txt_path = predictor.txt_path.parent / p.parent.name
 
-                if predictor.tracker_outputs[i].size != 0 and predictor.args.save_mot:
+                # if predictor.tracker_outputs[i].size != 0 and predictor.args.save_mot:
+                if predictor.args.save_mot:
                     # needed if txt save is not activated, otherwise redundant
                     predictor.MOT_txt_path.mkdir(
                         parents=True, exist_ok=predictor.args.exist_ok)
-                    write_MOT_results(
-                        predictor.MOT_txt_path,
-                        predictor.results[i],
-                        frame_idx,
-                        i,
-                    )
+                    with open(str(predictor.MOT_txt_path) + '.txt', 'a') as f:
+                        pass  # creates empty txt file.
+                    if predictor.tracker_outputs[i].size != 0:
+                        write_MOT_results(
+                            predictor.MOT_txt_path,
+                            predictor.results[i],
+                            frame_idx,
+                            i,
+                        )
 
                 if predictor.args.save_id_crops:
                     for d in predictor.results[i].boxes:

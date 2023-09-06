@@ -23,6 +23,8 @@ from git import Repo
 import zipfile
 from pathlib import Path
 import shutil
+from pathlib import PosixPath
+
 from tqdm import tqdm
 import numpy as np
 from torch.utils.tensorboard import SummaryWriter
@@ -183,24 +185,27 @@ class Evaluator:
                     src_seq_path = seq_path
                     shutil.move(str(src_seq_path), str(dst_seq_path))
 
-                LOGGER.info(f"Staring evaluation process on {dst_seq_path}")
+                LOGGER.info(f"Starting evaluation process on {dst_seq_path}")
+                args_for_tracking = [
+                    sys.executable, str(EXAMPLES / "track.py"),
+                    "--yolo-model", self.opt.yolo_model,
+                    "--reid-model", self.opt.reid_model,
+                    "--tracking-method", self.opt.tracking_method,
+                    "--conf", str(self.opt.conf),
+                    "--imgsz", str(self.opt.imgsz[0]),
+                    "--classes", *self.opt.classes,
+                    "--name", save_dir.name,
+                    "--save-mot",
+                    "--project", self.opt.project,
+                    "--device", str(tracking_subprocess_device),
+                    "--source", dst_seq_path,
+                    "--exist-ok",
+                    "--save",
+                ]
+                print("args_for_tracking", args_for_tracking)
+
                 p = subprocess.Popen(
-                    args=[
-                        sys.executable, str(EXAMPLES / "track.py"),
-                        "--yolo-model", self.opt.yolo_model,
-                        "--reid-model", self.opt.reid_model,
-                        "--tracking-method", self.opt.tracking_method,
-                        "--conf", str(self.opt.conf),
-                        "--imgsz", str(self.opt.imgsz[0]),
-                        "--classes", *self.opt.classes,
-                        "--name", save_dir.name,
-                        "--save-mot",
-                        "--project", self.opt.project,
-                        "--device", str(tracking_subprocess_device),
-                        "--source", dst_seq_path,
-                        "--exist-ok",
-                        "--save",
-                    ],
+                    args=args_for_tracking,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
                     text=True
@@ -224,21 +229,27 @@ class Evaluator:
 
         # run the evaluation on the generated txts
         d = [seq_path.parent.name for seq_path in seq_paths]
+        args_to_be_parsed = [
+            sys.executable, val_tools_path / 'scripts' / 'run_mot_challenge.py',
+            "--GT_FOLDER", gt_folder,
+            "--BENCHMARK", "",
+            "--TRACKERS_FOLDER", save_dir,   # project/name
+            "--TRACKERS_TO_EVAL", "labels",  # project/name/labels
+            "--SPLIT_TO_EVAL", "train",
+            "--METRICS", "HOTA", "CLEAR", "Identity",
+            "--USE_PARALLEL", "True",
+            "--TRACKER_SUB_FOLDER", "",
+            "--NUM_PARALLEL_CORES", "4",
+            "--SKIP_SPLIT_FOL", "True",
+            "--SEQ_INFO", *d
+        ]
+
+        # args_to_be_parsed = ['/home/juma/code/luqmon_tracking/myenv/bin/python3', PosixPath('/home/juma/code/luqmon_tracking/examples/val_utils/scripts/run_mot_challenge.py'), '--GT_FOLDER', PosixPath('/home/juma/code/luqmon_tracking/examples/val_utils/data/MOT17/train'), '--BENCHMARK', '', '--TRACKERS_FOLDER', PosixPath(
+        #     '/home/juma/code/luqmon_tracking/examples/runs/val/exp137'), '--TRACKERS_TO_EVAL', 'labels', '--SPLIT_TO_EVAL', 'train', '--METRICS', 'HOTA', 'CLEAR', 'Identity', '--USE_PARALLEL', 'True', '--TRACKER_SUB_FOLDER', '', '--NUM_PARALLEL_CORES', '4', '--SKIP_SPLIT_FOL', 'True', '--SEQ_INFO', 'MOT17-02-FRCNN', 'MOT17-04-FRCNN', 'MOT17-05-FRCNN', 'MOT17-09-FRCNN', 'MOT17-10-FRCNN', 'MOT17-11-FRCNN', 'MOT17-13-FRCNN']
+
+        print("args_for_evaluation", args_to_be_parsed)
         p = subprocess.Popen(
-            args=[
-                sys.executable, val_tools_path / 'scripts' / 'run_mot_challenge.py',
-                "--GT_FOLDER", gt_folder,
-                "--BENCHMARK", "",
-                "--TRACKERS_FOLDER", save_dir,   # project/name
-                "--TRACKERS_TO_EVAL", "labels",  # project/name/labels
-                "--SPLIT_TO_EVAL", "train",
-                "--METRICS", "HOTA", "CLEAR", "Identity",
-                "--USE_PARALLEL", "True",
-                "--TRACKER_SUB_FOLDER", "",
-                "--NUM_PARALLEL_CORES", "4",
-                "--SKIP_SPLIT_FOL", "True",
-                "--SEQ_INFO", *d
-            ],
+            args=args_to_be_parsed,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True
@@ -264,6 +275,8 @@ class Evaluator:
             opt.tracking_method /\
             'configs' /\
             (opt.tracking_method + '.yaml')
+        print("tracking_config is copied to ",
+              save_dir / Path(tracking_config).name)
         shutil.copyfile(tracking_config, save_dir / Path(tracking_config).name)
 
         return stdout
@@ -347,7 +360,7 @@ def parse_opt():
                         help='existing project/name ok, do not increment')
     parser.add_argument('--eval-existing', action='store_true',
                         help='evaluate existing results under project/name/labels')
-    parser.add_argument('--conf', type=float, default=0.45,
+    parser.add_argument('--conf', type=float, default=0.25,
                         help='confidence threshold')
     parser.add_argument('--imgsz', '--img', '--img-size', nargs='+',
                         type=int, default=[1280], help='inference size h,w')

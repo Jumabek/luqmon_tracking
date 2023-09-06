@@ -371,7 +371,7 @@ class OCSort(object):
         Returns the a similar array, where the last column is the object ID.
         NOTE: The number of objects returned may differ from the number of detections provided.
         """
-
+        print("self.frame_count", self.frame_count)
         assert isinstance(
             dets, np.ndarray), f"Unsupported 'dets' input format '{type(dets)}', valid format is np.ndarray"
         assert isinstance(
@@ -379,7 +379,6 @@ class OCSort(object):
         assert len(
             dets.shape) == 2, f"Unsupported 'dets' dimensions, valid number of dimensions is two"
         assert dets.shape[1] == 6, f"Unsupported 'dets' 2nd dimension lenght, valid lenghts is 6"
-        print("feature_map_boxes.shape", feature_map_boxes.shape)
         xyxys = dets[:, 0:4]
         scores = dets[:, 4]
         clss = dets[:, 5]
