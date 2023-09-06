@@ -1,4 +1,4 @@
-# This repo contains Luqmon Tracker - a tracker with high tracking performance while staying efficient. 
+# In addition to upstream, this repo contains Luqmon Tracker - a tracker with high tracking performance while staying efficient. 
 ## installation
 ### background
 - Git Submodules is used in this project. Refresh your knowledge on submodueles here https://git-scm.com/book/en/v2/Git-Tools-Submodules
